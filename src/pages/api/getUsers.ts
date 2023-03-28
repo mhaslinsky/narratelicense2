@@ -2,15 +2,15 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function getUsers(req: NextApiRequest, res: NextApiResponse) {
-  console.log(process.env.USER);
-  console.log(process.env.PASSWORD);
-
+  const currentDate = new Date();
+  const startDate = currentDate.toISOString().slice(0, 10) + "T00:00:00+00:00";
+  const endDate = currentDate.toISOString().slice(0, 10) + "T23:59:59+06:00";
   try {
     const { data } = await axios.post(
       "https://healthcare.nvoq.com/SCVmcServices/rest/organizations/ZhR9-0ijbLc8wDYcKQ0zQw/reports/hgGjPIAJQPGJJvrZj_ZmPA",
       {
-        startDate: "2022-03-11T00:00:00+06:00",
-        endDate: "2022-03-11T23:59:59+06:00",
+        startDate,
+        endDate,
       },
       {
         auth: {

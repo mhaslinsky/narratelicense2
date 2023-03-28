@@ -66,7 +66,8 @@ function UserTotals(props: { users: User[] }) {
 
   return (
     <Title>
-      {props.users.length} users, {enabled} enabled, {enabledandNonBillable} non-billable. {chargeable} chargeable.
+      {nonBillable} non-billable, {props.users.length} users, {enabled} enabled, {enabledandNonBillable} enabled
+      and non-billable. {chargeable} chargeable.
     </Title>
   );
 }
