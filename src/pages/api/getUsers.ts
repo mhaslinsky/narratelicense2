@@ -2,7 +2,6 @@ import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function getUsers(req: NextApiRequest, res: NextApiResponse) {
-  console.log(process.env.USERNAME, process.env.PASSWORD);
   try {
     const { data } = await axios.post(
       "https://healthcare.nvoq.com/SCVmcServices/rest/organizations/ZhR9-0ijbLc8wDYcKQ0zQw/reports/hgGjPIAJQPGJJvrZj_ZmPA",

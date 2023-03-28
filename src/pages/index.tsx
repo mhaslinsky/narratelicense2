@@ -61,11 +61,12 @@ export default Home;
 function UserTotals(props: { users: User[] }) {
   const nonBillable = props.users.filter((u) => u["Non-billable"] === 1).length;
   const enabled = props.users.filter((u) => u["Enabled"] === 1).length;
-  const chargeable = enabled - nonBillable;
+  const enabledandNonBillable = props.users.filter((u) => u["Enabled"] === 1 && u["Non-billable"] === 1).length;
+  const chargeable = enabled - enabledandNonBillable;
 
   return (
     <Title>
-      {props.users.length} users, {enabled} enabled, {nonBillable} non-billable. {chargeable} chargeable.
+      {props.users.length} users, {enabled} enabled, {enabledandNonBillable} non-billable. {chargeable} chargeable.
     </Title>
   );
 }
