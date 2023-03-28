@@ -59,6 +59,7 @@ const Home: NextPage = (props) => {
         setLoading(false);
       } catch (e) {
         console.log(e);
+        setLoading(false);
       }
     };
     fetchUsers();
