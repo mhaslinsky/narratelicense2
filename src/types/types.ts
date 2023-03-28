@@ -1,4 +1,4 @@
-export interface User {
+export interface UserWithBillable {
   Group: string;
   New: number;
   "Accuracy Optimization Service": number;
@@ -17,3 +17,21 @@ export interface User {
   "First name": string;
   Division: string;
 }
+
+export interface UserWithLastActive {
+  Status: null | string;
+  "Client group": string;
+  Username: string;
+  "Active account": number;
+  "First name": string;
+  "Last activity time": null | number;
+  "Last sign in time": null | number;
+  "Last name": string;
+  "Active shortcut": number;
+  "Active dictation": number;
+}
+
+export type CombinedData = UserWithBillable & {
+  "Last activity time": null | number;
+  "Last sign in time": null | number;
+};

@@ -1,20 +1,42 @@
 import { Stack, Title, Divider, LoadingOverlay } from "@mantine/core";
 import { NextPage } from "next";
 import { useEffect, useMemo, useState } from "react";
-import { User } from "@/types/types";
+import { UserWithBillable, UserWithLastActive, CombinedData } from "@/types/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import UserTable from "@/UserTable";
 
 const Home: NextPage = (props) => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<CombinedData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const users = await fetch("/api/getUsers").then((res) => res.json());
-        setUsers(users);
+        const usersWithBillable: UserWithBillable[] = await fetch("/api/getUsers").then((res) => res.json());
+        const userWithActiveDates: UserWithLastActive[] = await fetch("/api/getUsersLastActive").then((res) =>
+          res.json()
+        );
+        const combinedData = usersWithBillable.map((userBillable) => {
+          const matchingUser = userWithActiveDates.find(
+            (userWDates) =>
+              userWDates["Last name"] === userBillable["Last name"] &&
+              userWDates["First name"] === userBillable["First name"]
+          );
+          if (matchingUser) {
+            return {
+              ...userBillable,
+              "Last activity time": matchingUser["Last activity time"],
+              "Last sign in time": matchingUser["Last sign in time"],
+            };
+          }
+          return {
+            ...userBillable,
+            "Last activity time": null,
+            "Last sign in time": null,
+          };
+        });
+        setUsers(combinedData);
         setLoading(false);
       } catch (e) {
         console.log(e);
@@ -23,7 +45,7 @@ const Home: NextPage = (props) => {
     fetchUsers();
   }, []);
 
-  const columnHelper = createColumnHelper<User>();
+  const columnHelper = createColumnHelper<CombinedData>();
   const columns = useMemo(
     () => [
       columnHelper.accessor((row) => `${row["Last name"]}`, {
@@ -42,6 +64,24 @@ const Home: NextPage = (props) => {
         header: "Non-Billable",
         cell: (info) => info.getValue(),
       }),
+      columnHelper.accessor((row) => `${row["Last sign in time"]}`, {
+        header: "Last Sign In",
+        cell: (info) => {
+          const timestamp = info.getValue();
+          const date = new Date(parseInt(timestamp));
+          if (date.toString() === "Invalid Date") return "None Found";
+          return date.toLocaleDateString();
+        },
+      }),
+      columnHelper.accessor((row) => `${row["Last activity time"]}`, {
+        header: "Last Activity",
+        cell: (info) => {
+          const timestamp = info.getValue();
+          const date = new Date(parseInt(timestamp));
+          if (date.toString() === "Invalid Date") return "None Found";
+          return date.toLocaleDateString();
+        },
+      }),
     ],
     [columnHelper]
   );
@@ -58,14 +98,16 @@ const Home: NextPage = (props) => {
 
 export default Home;
 
-function UserTotals(props: { users: User[] }) {
+function UserTotals(props: { users: CombinedData[] }) {
   const nonBillable = props.users.filter((u) => u["Non-billable"] === 1).length;
   const enabled = props.users.filter((u) => u["Enabled"] === 1).length;
   const enabledandNonBillable = props.users.filter((u) => u["Enabled"] === 1 && u["Non-billable"] === 1).length;
   const chargeable = enabled - enabledandNonBillable;
 
   return (
-    <Title>
+    <Title pt={16}>
+      Wayne Memorial Narrate License and Activity Info:
+      <br />
       {props.users.length} users, {enabled} enabled, {nonBillable} non-billable, {enabledandNonBillable} enabled
       and non-billable. {chargeable} chargeable.
     </Title>

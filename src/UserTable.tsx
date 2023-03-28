@@ -13,7 +13,7 @@ import {
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import { SortAscending, SortDescending } from "tabler-icons-react";
 import React, { useState } from "react";
-import { User } from "./types/types";
+import { CombinedData } from "./types/types";
 
 declare module "@tanstack/table-core" {
   interface FilterFns {
@@ -33,7 +33,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const UserTable: React.FC<{ columns: any; loading: boolean; data: User[] }> = (props) => {
+const UserTable: React.FC<{ columns: any; loading: boolean; data: CombinedData[] }> = (props) => {
   const localStyles = createStyles((theme) => ({
     tHeader: {
       "&:hover": {
@@ -72,7 +72,7 @@ const UserTable: React.FC<{ columns: any; loading: boolean; data: User[] }> = (p
         height: "100%",
       })}
     >
-      <Mtable>
+      <Mtable striped highlightOnHover withColumnBorders>
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
