@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    USERNAME: "mhaslinsky@toppcopy.com.supp",
-    PASSWORD: "u5Q@W5Jx6w7e",
+    USER: process.env.USER,
+    DOMAIN: process.env.DOMAIN,
+    PASSWORD: process.env.PASSWORD,
   },
   reactStrictMode: true,
 };
