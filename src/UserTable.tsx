@@ -1,4 +1,4 @@
-import { Box, Flex, LoadingOverlay, ScrollArea, Table as Mtable, createStyles } from "@mantine/core";
+import { Box, Flex, Table as Mtable, createStyles } from "@mantine/core";
 import {
   flexRender,
   getCoreRowModel,
@@ -65,7 +65,6 @@ const UserTable: React.FC<{ columns: any; loading: boolean; data: CombinedData[]
 
   return (
     <Box
-      component={ScrollArea}
       sx={(theme) => ({
         flexGrow: 1,
         position: "relative",

@@ -1,12 +1,12 @@
 import { Stack, Title, Divider, LoadingOverlay } from "@mantine/core";
 import { NextPage } from "next";
 import { useEffect, useMemo, useState } from "react";
-import { UserWithBillable, UserWithLastActive, CombinedData } from "@/types/types";
+import { UserWithBillable, UserWithLastActive, CombinedData, UserAccountCreation } from "@/types/types";
 import { createColumnHelper } from "@tanstack/react-table";
 import UserTable from "@/UserTable";
 
 const Home: NextPage = (props) => {
-  const [users, setUsers] = useState<CombinedData[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -17,7 +17,10 @@ const Home: NextPage = (props) => {
         const userWithActiveDates: UserWithLastActive[] = await fetch("/api/getUsersLastActive").then((res) =>
           res.json()
         );
-        const combinedData = usersWithBillable.map((userBillable) => {
+        const userWithCreationDates: UserAccountCreation[] = await fetch("/api/getAccountCreation").then((res) =>
+          res.json()
+        );
+        const firstStage = usersWithBillable.map((userBillable) => {
           const matchingUser = userWithActiveDates.find(
             (userWDates) =>
               userWDates["Last name"] === userBillable["Last name"] &&
@@ -36,7 +39,23 @@ const Home: NextPage = (props) => {
             "Last sign in time": null,
           };
         });
-        setUsers(combinedData);
+        const secondStage = firstStage.map((user) => {
+          const matchingUser = userWithCreationDates.find(
+            (userCreation) =>
+              userCreation["Last name"] === user["Last name"] && userCreation["First name"] === user["First name"]
+          );
+          if (matchingUser) {
+            return {
+              ...user,
+              "Creation date": matchingUser["Creation date"],
+            };
+          }
+          return {
+            ...user,
+            "Creation date": "> 3 years ago",
+          };
+        });
+        setUsers(secondStage);
         setLoading(false);
       } catch (e) {
         console.log(e);
@@ -63,6 +82,16 @@ const Home: NextPage = (props) => {
       columnHelper.accessor((row) => `${row["Non-billable"]}`, {
         header: "Non-Billable",
         cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor((row) => `${row["Creation date"]}`, {
+        header: "Created",
+        cell: (info) => {
+          if (info.getValue() === "> 3 years ago") return "> 3 years ago";
+          const timestamp = info.getValue();
+          const date = new Date(parseInt(timestamp));
+          if (date.toString() === "Invalid Date") return "None Found";
+          return date.toLocaleDateString();
+        },
       }),
       columnHelper.accessor((row) => `${row["Last sign in time"]}`, {
         header: "Last Sign In",

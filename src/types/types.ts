@@ -31,7 +31,18 @@ export interface UserWithLastActive {
   "Active dictation": number;
 }
 
+export interface UserAccountCreation {
+  Status: string;
+  "Creation date": number;
+  "Client group": string;
+  Username: string;
+  "First name": string;
+  "Last name": string;
+  "First client sign in": number;
+}
+
 export type CombinedData = UserWithBillable & {
   "Last activity time": null | number;
   "Last sign in time": null | number;
+  "Creation date": number;
 };
