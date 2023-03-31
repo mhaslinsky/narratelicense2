@@ -76,6 +76,10 @@ const Home: NextPage = (props) => {
         header: "First name",
         cell: (info) => info.getValue(),
       }),
+      columnHelper.accessor((row) => `${row["Group"]}`, {
+        header: "Group",
+        cell: (info) => info.getValue(),
+      }),
       columnHelper.accessor((row) => `${row["Enabled"]}`, {
         header: "Enabled",
         cell: (info) => info.getValue(),
