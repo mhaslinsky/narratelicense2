@@ -59,6 +59,7 @@ const Home: NextPage = (props) => {
         setLoading(false);
       } catch (e) {
         console.log(e);
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -73,6 +74,10 @@ const Home: NextPage = (props) => {
       }),
       columnHelper.accessor((row) => `${row["First name"]}`, {
         header: "First name",
+        cell: (info) => info.getValue(),
+      }),
+      columnHelper.accessor((row) => `${row["Group"]}`, {
+        header: "Group",
         cell: (info) => info.getValue(),
       }),
       columnHelper.accessor((row) => `${row["Enabled"]}`, {
