@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
-import { SortAscending, SortDescending } from "tabler-icons-react";
+import { SortAscending, SortDescending, CursorText } from "tabler-icons-react";
 import React, { useState } from "react";
 import { CombinedData } from "./types/types";
 
@@ -80,13 +80,16 @@ const UserTable: React.FC<{ columns: any; loading: boolean; data: CombinedData[]
                   {header.isPlaceholder ? null : (
                     <Flex align='center' gap='sm'>
                       <>
+                        {console.log(header.column.getIsSorted())}
                         <div className={classes.tHeader} onClick={header.column.getToggleSortingHandler()}>
                           {flexRender(header.column.columnDef.header, header.getContext())}
                         </div>
                         {
-                          { asc: <SortAscending size={18} />, desc: <SortDescending size={18} /> }[
-                            header.column.getIsSorted() as string
-                          ]
+                          {
+                            asc: <SortAscending size={18} />,
+                            desc: <SortDescending size={18} />,
+                            false: <CursorText color={"#FFFFFF"} size={18} />,
+                          }[header.column.getIsSorted() as string]
                         }
                       </>
                     </Flex>
