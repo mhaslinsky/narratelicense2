@@ -1,4 +1,4 @@
-import { Stack, Title, Divider, LoadingOverlay } from "@mantine/core";
+import { Stack, Title, Divider, LoadingOverlay, Card } from "@mantine/core";
 import { NextPage } from "next";
 import { useEffect, useMemo, useState } from "react";
 import { UserWithBillable, UserWithLastActive, CombinedData, UserAccountCreation } from "@/types/types";
@@ -121,12 +121,14 @@ const Home: NextPage = (props) => {
   );
 
   return (
-    <Stack>
-      <LoadingOverlay visible={loading} />
-      <UserTotals users={users || []} />
-      <Divider />
-      <UserTable columns={columns} loading={false} data={users} />
-    </Stack>
+    <Card>
+      <Stack>
+        <LoadingOverlay visible={loading} />
+        <UserTotals users={users || []} />
+        <Divider />
+        <UserTable columns={columns} loading={false} data={users} />
+      </Stack>
+    </Card>
   );
 };
 
@@ -139,7 +141,7 @@ function UserTotals(props: { users: CombinedData[] }) {
   const chargeable = enabled - enabledandNonBillable;
 
   return (
-    <Title pt={16}>
+    <Title>
       Wayne Memorial Narrate License and Activity Info:
       <br />
       {props.users.length} users, {enabled} enabled, {nonBillable} non-billable, {enabledandNonBillable} enabled
