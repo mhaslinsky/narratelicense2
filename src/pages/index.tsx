@@ -1,4 +1,4 @@
-import { Stack, Title, Divider, LoadingOverlay } from "@mantine/core";
+import { Stack, Title, Divider, LoadingOverlay, Card } from "@mantine/core";
 import { NextPage } from "next";
 import { useEffect, useMemo, useState } from "react";
 import { UserWithBillable, UserWithLastActive, CombinedData, UserAccountCreation } from "@/types/types";
@@ -116,12 +116,14 @@ const Home: NextPage = (props) => {
   );
 
   return (
-    <Stack>
-      <LoadingOverlay visible={loading} />
-      <UserTotals users={users || []} />
-      <Divider />
-      <UserTable columns={columns} loading={false} data={users} />
-    </Stack>
+    <Card>
+      <Stack>
+        <LoadingOverlay visible={loading} />
+        <UserTotals users={users || []} />
+        <Divider />
+        <UserTable columns={columns} loading={false} data={users} />
+      </Stack>
+    </Card>
   );
 };
 
