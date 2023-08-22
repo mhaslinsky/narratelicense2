@@ -142,7 +142,7 @@ function UserTotals(props: { users: CombinedData[] }) {
 
   return (
     <Title pt={16}>
-      Wayne Memorial Narrate License and Activity Info:
+      Wayne Memorial Narrate License and Activity Info.
       <br />
       {props.users.length} users, {enabled} enabled, {nonBillable} non-billable, {enabledandNonBillable} enabled
       and non-billable. {chargeable} chargeable.
